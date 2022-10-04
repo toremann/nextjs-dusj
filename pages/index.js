@@ -1,8 +1,35 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
+import { useState } from 'react'
 
-export default function Home() {
+export async function getServerSideProps() {
+  // Fetch data from external API
+  const res = await fetch(`https://rest.fjordkraft.no/pricecalculator/priceareainfo/private/1001`)
+  const data = await res.json()
+
+  console.log(data)
+
+  // Pass data to the page via props
+  return { props: { data } }
+
+}
+
+export default function Home({data}) {
+
+  const [seconds, setSeconds] = useState(0)
+
+
+  const startTimer = () => {
+
+  }
+
+  const stopTimer = () => {
+
+  }
+
+  const currentCount = seconds
+
   return (
     <div className={styles.container}>
       <Head>
@@ -13,42 +40,12 @@ export default function Home() {
 
       <main className={styles.main}>
         <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
+        {(data.price / 100).toFixed(2)} nok
         </h1>
-
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h2>Documentation &rarr;</h2>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h2>Learn &rarr;</h2>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/canary/examples"
-            className={styles.card}
-          >
-            <h2>Examples &rarr;</h2>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h2>Deploy &rarr;</h2>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
+        <p id="counter">{currentCount}</p>
+        <div className="counter-container">
+            <button className="start-button" onClick={startTimer()}>DUSJ</button>
+            <button className="stop-button" onClick={stopTimer()}>FERDIG</button>
         </div>
       </main>
 
