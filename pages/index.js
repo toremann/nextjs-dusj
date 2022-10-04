@@ -1,34 +1,36 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
-import { useState } from 'react'
+import Head from "next/head";
+import Image from "next/image";
+import styles from "../styles/Home.module.css";
+import { useState } from "react";
 
 export async function getServerSideProps() {
   // Fetch data from external API
-  const res = await fetch(`https://rest.fjordkraft.no/pricecalculator/priceareainfo/private/1001`)
-  const data = await res.json()
+  const res = await fetch(
+    `https://rest.fjordkraft.no/pricecalculator/priceareainfo/private/1001`
+  );
+  const data = await res.json();
 
-  console.log(data)
+  console.log(data);
 
   // Pass data to the page via props
-  return { props: { data } }
-
+  return { props: { data } };
 }
 
-export default function Home({data}) {
-
-  const [seconds, setSeconds] = useState(0)
-
+export default function Home({ data }) {
+  const [seconds, setSeconds] = useState(0);
 
   const startTimer = () => {
-
-  }
+    setInterval(() => {
+      setSeconds((seconds) => seconds + 1);
+    }, 1000);
+  };
 
   const stopTimer = () => {
+    clearInterval(setSeconds(0));
+    document.querySelector("#counter").remove();
+  };
 
-  }
-
-  const currentCount = seconds
+  const currentCount = seconds;
 
   return (
     <div className={styles.container}>
@@ -39,13 +41,15 @@ export default function Home({data}) {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>
-        {(data.price / 100).toFixed(2)} nok
-        </h1>
+        <h1 className={styles.title}>{(data.price / 100).toFixed(2)} nok</h1>
         <p id="counter">{currentCount}</p>
         <div className="counter-container">
-            <button className="start-button" onClick={startTimer()}>DUSJ</button>
-            <button className="stop-button" onClick={stopTimer()}>FERDIG</button>
+          <button className="start-button" onClick={startTimer()}>
+            DUSJ
+          </button>
+          <button className="stop-button" onClick={stopTimer()}>
+            FERDIG
+          </button>
         </div>
       </main>
 
@@ -55,12 +59,12 @@ export default function Home({data}) {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Powered by{' '}
+          Powered by{" "}
           <span className={styles.logo}>
             <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
           </span>
         </a>
       </footer>
     </div>
-  )
+  );
 }
