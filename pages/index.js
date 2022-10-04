@@ -1,7 +1,7 @@
 import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export async function getServerSideProps() {
   // Fetch data from external API
@@ -17,20 +17,24 @@ export async function getServerSideProps() {
 }
 
 export default function Home({ data }) {
-  const [seconds, setSeconds] = useState(0);
 
-  const startTimer = () => {
-    setInterval(() => {
-      setSeconds((seconds) => seconds + 1);
-    }, 1000);
-  };
+  const [time, setTime] = useState(0);
+  const [running, setRunning] = useState(false);  
 
-  const stopTimer = () => {
-    clearInterval(setSeconds(0));
-    document.querySelector("#counter").remove();
-  };
+  const literPerMinutt = 16 
+  const literPerSekund = 0.26
 
-  const currentCount = seconds;
+  useEffect(() => {
+    let interval;
+    if (running) {
+      interval = setInterval(() => {
+        setTime((prevTime) => prevTime + 10);
+      }, 10);
+    } else if (!running) {
+      clearInterval(interval);
+    }
+    return () => clearInterval(interval);
+  }, [running]);
 
   return (
     <div className={styles.container}>
@@ -41,15 +45,16 @@ export default function Home({ data }) {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>{(data.price / 100).toFixed(2)} nok</h1>
-        <p id="counter">{currentCount}</p>
-        <div className="counter-container">
-          <button className="start-button" onClick={startTimer()}>
-            DUSJ
-          </button>
-          <button className="stop-button" onClick={stopTimer()}>
-            FERDIG
-          </button>
+        <div className={styles.calculator}>
+        <h1>Dusj kalkulator:</h1>
+        <h1 className={styles.title}>{(data.price / 100).toFixed(2)} NOK</h1>
+        <h1 className={styles.title}>{time * (data.price)} NOK</h1>
+
+        <h1>{("0" + Math.floor((time / 60000) % 60)).slice(-2)}:{("0" + Math.floor((time / 1000) % 60)).slice(-2)}:{("0" + ((time / 10) % 100)).slice(-2)}</h1>
+        
+        <button className={styles.button} onClick={() => setRunning(true)}>Start</button>
+        <button className={styles.button} onClick={() => setRunning(false)}>Stop</button>
+        <button className={styles.button} onClick={() => setTime(0)}>Reset</button>   
         </div>
       </main>
 
