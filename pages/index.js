@@ -24,6 +24,10 @@ export default function Home({ data }) {
   const literPerMinutt = 16 
   const literPerSekund = 0.26
 
+  const kWhPerMinutt = 0.56
+  const kWhPerSekund = 0.009
+  const kWhPerMillisekund = 0.00009
+
   useEffect(() => {
     let interval;
     if (running) {
@@ -48,7 +52,8 @@ export default function Home({ data }) {
         <div className={styles.calculator}>
         <h1>Dusj kalkulator:</h1>
         <h1 className={styles.title}>{(data.price / 100).toFixed(2)} NOK</h1>
-        <h1 className={styles.title}>{time * (data.price)} NOK</h1>
+        <h1 className={styles.title}>{(time * kWhPerMillisekund * (data.price / 1000)).toFixed(3)} NOK</h1>
+        <h1 className={styles.title}>{((Math.floor((time / 1000) % 60)) * kWhPerSekund).toFixed(3)} kWh</h1>
 
         <h1>{("0" + Math.floor((time / 60000) % 60)).slice(-2)}:{("0" + Math.floor((time / 1000) % 60)).slice(-2)}:{("0" + ((time / 10) % 100)).slice(-2)}</h1>
         
