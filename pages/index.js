@@ -15,13 +15,12 @@ export async function getServerSideProps() {
 }
 
 export default function Home({ data }) {
-
   // time is milliseconds
   const [time, setTime] = useState(0);
-  const [running, setRunning] = useState(false);  
+  const [running, setRunning] = useState(false);
 
-  const kWhPris = data.price / 100
-  const dato = data.lastUpdatedPriceAreaDate
+  const kWhPris = data.price / 100;
+  const dato = data.lastUpdatedPriceAreaDate;
 
   useEffect(() => {
     let interval;
@@ -45,16 +44,27 @@ export default function Home({ data }) {
 
       <main className={styles.main}>
         <div className={styles.calculator}>
-        <h1>Dusj kalkulator:</h1>
-        <h1 className={styles.title}>{(kWhPris).toFixed(2)} NOK</h1> <b>{new Date(dato).toLocaleString('en-GB')}</b>
-        <h1 className={styles.title}>{(((time / 60000) % 60) * kWhPris).toFixed(2)} NOK</h1>
-
-        {/* Timer */}
-        <h1>{("0" + Math.floor((time / 60000) % 60)).slice(-2)}:{("0" + Math.floor((time / 1000) % 60)).slice(-2)}:{("0" + ((time / 10) % 100)).slice(-2)}</h1>
-        
-        <button className={styles.button} onClick={() => setRunning(true)}>Start</button>
-        <button className={styles.button} onClick={() => setRunning(false)}>Stop</button>
-        <button className={styles.button} onClick={() => setTime(0)}>Reset</button>   
+          <h1>Dusj kalkulator:</h1>
+          <h1 className={styles.title}>{kWhPris.toFixed(2)} NOK</h1>{" "}
+          <b>{new Date(dato).toLocaleString("en-GB")}</b>
+          <h1 className={styles.title}>
+            {(((time / 60000) % 60) * kWhPris).toFixed(2)} NOK
+          </h1>
+          {/* Timer */}
+          <h1>
+            {("0" + Math.floor((time / 60000) % 60)).slice(-2)}:
+            {("0" + Math.floor((time / 1000) % 60)).slice(-2)}:
+            {("0" + ((time / 10) % 100)).slice(-2)}
+          </h1>
+          <button className={styles.button} onClick={() => setRunning(true)}>
+            Start
+          </button>
+          <button className={styles.button} onClick={() => setRunning(false)}>
+            Stop
+          </button>
+          <button className={styles.button} onClick={() => setTime(0)}>
+            Reset
+          </button>
         </div>
       </main>
 
