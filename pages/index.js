@@ -22,6 +22,12 @@ export default function Home({ data }) {
   const kWhPris = data.price / 100;
   const dato = data.lastUpdatedPriceAreaDate;
 
+  // Et normalt dusjhode slipper igjennom ca 16 liter vann i minuttet. Ca 0,035 kWh kreves per liter vann.
+  // Altså: 0,035 kWh x 16 liter = 0,56 kWh per minutt
+
+  const showerUsagePerMin = 0.56 //kWh
+  const showerUsagePerSecond = 0.056 //kWh
+
   useEffect(() => {
     let interval;
     if (running) {
@@ -45,11 +51,12 @@ export default function Home({ data }) {
       <main className={styles.main}>
         <div className={styles.calculator}>
           <h1>Dusj kalkulator:</h1>
-          <h1 className={styles.title}>{kWhPris.toFixed(2)} NOK</h1>{" "}
+          <h1 className={styles.title}>{kWhPris.toFixed(2)} NOK</h1>
           <b>{new Date(dato).toLocaleString("en-GB")}</b>
           <h1 className={styles.title}>
-            {(((time / 60000) % 60) * kWhPris).toFixed(2)} NOK
+            {((((time / 60000) % 60) * showerUsagePerSecond) * kWhPris ).toFixed(2)} NOK
           </h1>
+          <h1>{(((time / 60000) % 60) * showerUsagePerSecond).toFixed(3)} kWh</h1>
           {/* Timer */}
           <h1>
             {("0" + Math.floor((time / 60000) % 60)).slice(-2)}:
