@@ -12,12 +12,14 @@
   align-items: center;
 }
 
-.calculator {}
+.calculator {
+  display: flex;
+  flex-direction: column;
+}
 
 
 .button {
   background-color: #4CAF50;
-  /* Green */
   border: none;
   color: white;
   padding: 16px 32px;
