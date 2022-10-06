@@ -27,13 +27,6 @@ export default function Home({ data }) {
 
   const showerUsagePerMin = 0.56 //kWh
 
-  // 3600 seconds in an houre
-  const kWhPrisPrSecond = data.price / 3600
-
-  const timerSeconds = ("0" + Math.floor((time / 1000) % 60)).slice(-2)
-
-
-  // console.log(((((time / 60000) % 60) * showerUsagePerSecond) * kWhPris / 360))
   useEffect(() => {
     let interval;
     if (running) {
@@ -65,15 +58,13 @@ export default function Home({ data }) {
 
           </h1>
 
-          {/* This works: */}
           <h1>{(((time / 60000) % 60) * showerUsagePerMin).toFixed(2)} kWh</h1>
-          {/* Timer */}
           <h1>
-            {/* min */}
+
             {("0" + Math.floor((time / 60000) % 60)).slice(-2)}:
-            {/* sec */}
+
             {("0" + Math.floor((time / 1000) % 60)).slice(-2)}:
-            {/* ms */}
+
             {("0" + ((time / 10) % 100)).slice(-2)}
           </h1>
           <button className={styles.button} onClick={() => setRunning(true)}>
