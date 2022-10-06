@@ -86,7 +86,7 @@ export default function Home({ data }) {
           rel="noopener noreferrer"
         >
           <span className={styles.logo}>
-            <AiFillGithub />
+            <AiFillGithub size={40}/>
           </span>
         </a>
       </footer>
