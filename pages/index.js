@@ -61,11 +61,8 @@ export default function Home({ data }) {
           <b>{new Date(dato).toLocaleString("en-GB")}</b>
           <h1 className={styles.title}>
             
+            {((((time / 60000) % 60) * showerUsagePerMin) * kWhPris).toFixed(2)} NOK
 
-            {( "0" + ((time / 10) % 100)) / showerUsagePerMin * (data.price / 100) } NOK
-
-
-            
           </h1>
 
           {/* This works: */}
