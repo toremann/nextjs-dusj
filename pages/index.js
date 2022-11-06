@@ -25,7 +25,7 @@ export default function Home({ data }) {
   // Et normalt dusjhode slipper igjennom ca 16 liter vann i minuttet. Ca 0,035 kWh kreves per liter vann.
   // Altså: 0,035 kWh x 16 liter = 0,56 kWh per minutt
 
-  const showerUsagePerMin = 0.56 //kWh
+  const showerUsagePerMin = 0.56; //kWh
 
   useEffect(() => {
     let interval;
@@ -53,29 +53,67 @@ export default function Home({ data }) {
           <h1 className={styles.title}>{kWhPris.toFixed(2)} NOK/kWh</h1>
           <b>{new Date(dato).toLocaleString("en-GB")}</b>
           <h1 className={styles.title}>
-            
-            {((((time / 60000) % 60) * showerUsagePerMin) * kWhPris).toFixed(2)} NOK
-
+            {(((time / 60000) % 60) * showerUsagePerMin * kWhPris).toFixed(2)}{" "}
+            NOK
           </h1>
 
           <h1>{(((time / 60000) % 60) * showerUsagePerMin).toFixed(2)} kWh</h1>
           <h1>
-
             {("0" + Math.floor((time / 60000) % 60)).slice(-2)}:
-
             {("0" + Math.floor((time / 1000) % 60)).slice(-2)}:
-
             {("0" + ((time / 10) % 100)).slice(-2)}
           </h1>
-          <button className={styles.button} onClick={() => setRunning(true)}>
-            Start
-          </button>
-          <button className={styles.button} onClick={() => setRunning(false)}>
-            Stop
-          </button>
-          <button className={styles.button} onClick={() => setTime(0)}>
-            Reset
-          </button>
+
+          <div
+            class="btn-group-vertical"
+            role="group"
+            aria-label="start_stop_reset toggle group"
+          >
+            <input
+              type="radio"
+              class="btn-check"
+              name="start_stop_reset"
+              id="start"
+              autocomplete="off"
+            />
+            <label
+              class="btn btn-success"
+              for="start"
+              onClick={() => setRunning(true)}
+            >
+              Start
+            </label>
+
+            <input
+              type="radio"
+              class="btn-check"
+              name="start_stop_reset"
+              id="stop"
+              autocomplete="off"
+            />
+            <label
+              class="btn btn-warning"
+              for="stop"
+              onClick={() => setRunning(false)}
+            >
+              Stop
+            </label>
+
+            <input
+              type="radio"
+              class="btn-check"
+              name="start_stop_reset"
+              id="reset"
+              autocomplete="off"
+            />
+            <label
+              class="btn btn-danger"
+              for="reset"
+              onClick={() => setTime(0)}
+            >
+              Reset
+            </label>
+          </div>
         </div>
       </main>
 
@@ -86,7 +124,7 @@ export default function Home({ data }) {
           rel="noopener noreferrer"
         >
           <span className={styles.logo}>
-            <AiFillGithub size={40}/>
+            <AiFillGithub size={40} />
           </span>
         </a>
       </footer>
