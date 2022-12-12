@@ -49,7 +49,15 @@ export default function Home({ data }) {
 
       <main className={styles.main}>
         <div className={styles.calculator}>
-          <h1>Dusj kalkulator:</h1>
+          <div class="jumbotron jumbotron-fluid">
+            <div class="container">
+              <h1 class="display-4">Dusjkalkulator</h1>
+              <p class="lead">
+                En enkel kalkulator for å kalkulere ca pris på en dusj. Pris
+                hentes sporadisk 😃
+              </p>
+            </div>
+          </div>
           <h1 className={styles.title}>{kWhPris.toFixed(2)} NOK/kWh</h1>
           <b>{new Date(dato).toLocaleString("en-GB")}</b>
           <h1 className={styles.title}>
@@ -122,6 +130,7 @@ export default function Home({ data }) {
           href="https://github.com/toremann"
           target="_blank"
           rel="noopener noreferrer"
+          aria-label="Read more about this project"
         >
           <span className={styles.logo}>
             <AiFillGithub size={40} />
