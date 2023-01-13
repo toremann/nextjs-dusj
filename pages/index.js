@@ -35,9 +35,10 @@ export default function Home({ data }) {
       }, 10);
     } else if (!running) {
       clearInterval(interval);
+      console.log(time)
+      localStorage.setItem('showerTime', JSON.stringify({date: new Date(), time: time}))
     }
-    return () => clearInterval(interval) && console.log(time)
-    
+    return () => clearInterval(interval)
   }, [running]);
 
   return (
