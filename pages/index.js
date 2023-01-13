@@ -18,6 +18,7 @@ export default function Home({ data }) {
   // time is milliseconds
   const [time, setTime] = useState(0);
   const [running, setRunning] = useState(false);
+  const [showers, setShowers] = useState([]);
 
   const kWhPris = data.price / 100;
   const dato = data.lastUpdatedPriceAreaDate;
@@ -27,6 +28,27 @@ export default function Home({ data }) {
 
   const showerUsagePerMin = 0.56; //kWh
 
+  const getSet = () => {
+    const existingEntries = JSON.parse(localStorage.getItem("showerTime"));
+    if (existingEntries == null) existingEntries = [];
+
+    let entry = {
+      time: time,
+      date: new Date(),
+      price: (((time / 60000) % 60) * showerUsagePerMin * kWhPris).toFixed(2),
+    };
+
+    localStorage.setItem("showerTimeNew", JSON.stringify(entry));
+    // Save allEntries back to local storage
+    existingEntries.push(entry);
+    localStorage.setItem("showerTime", JSON.stringify(existingEntries));
+  };
+
+  useEffect(() => {
+    // Perform localStorage action
+    setShowers(JSON.parse(localStorage.getItem("showerTime")));
+  }, [showers]);
+
   useEffect(() => {
     let interval;
     if (running) {
@@ -35,10 +57,8 @@ export default function Home({ data }) {
       }, 10);
     } else if (!running) {
       clearInterval(interval);
-      console.log(time)
-      localStorage.setItem('showerTime', JSON.stringify({date: new Date(), time: time}))
     }
-    return () => clearInterval(interval)
+    return () => clearInterval(interval);
   }, [running]);
 
   return (
@@ -49,20 +69,20 @@ export default function Home({ data }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
-        <div className={styles.calculator}>
-          <div className="jumbotron jumbotron-fluid">
-            <div className="container">
-              <h1 className="display-4">Dusjkalkulator</h1>
-              <p className="lead">
-                En enkel kalkulator for å kalkulere ca pris på en dusj. Pris
-                hentes sporadisk 😃
-              </p>
-            </div>
-          </div>
-          <h1 className={styles.title}>{kWhPris.toFixed(2)} NOK/kWh</h1>
+      <div className="jumbotron jumbotron-fluid">
+        <div className="container">
+          <h1 className="display-4">Dusjkalkulator</h1>
+          <p className="lead">
+            En enkel kalkulator for å kalkulere ca pris på en dusj. Pris hentes
+            sporadisk 😃
+          </p>
+        </div>
+      </div>
+      <div className="d-flex justify-content-center row">
+        <div className="col">
+          <h1>{kWhPris.toFixed(2)} NOK/kWh</h1>
           <b>{new Date(dato).toLocaleString("en-GB")}</b>
-          <h1 className={styles.title}>
+          <h1>
             {(((time / 60000) % 60) * showerUsagePerMin * kWhPris).toFixed(2)}{" "}
             NOK
           </h1>
@@ -73,59 +93,74 @@ export default function Home({ data }) {
             {("0" + Math.floor((time / 1000) % 60)).slice(-2)}:
             {("0" + ((time / 10) % 100)).slice(-2)}
           </h1>
-
-          <div
-            className="btn-group-vertical"
-            role="group"
-            aria-label="start_stop_reset toggle group"
-          >
-            <input
-              type="radio"
-              className="btn-check"
-              name="start_stop_reset"
-              id="start"
-              autoComplete="off"
-            />
-            <label
-              className="btn btn-success"
-              htmlFor="start"
-              onClick={() => setRunning(true)}
-            >
-              Start
-            </label>
-
-            <input
-              type="radio"
-              className="btn-check"
-              name="start_stop_reset"
-              id="stop"
-              autoComplete="off"
-            />
-            <label
-              className="btn btn-warning"
-              htmlFor="stop"
-              onClick={() => setRunning(false)}
-            >
-              Stop
-            </label>
-
-            <input
-              type="radio"
-              className="btn-check"
-              name="start_stop_reset"
-              id="reset"
-              autoComplete="off"
-            />
-            <label
-              className="btn btn-danger"
-              htmlFor="reset"
-              onClick={() => setTime(0)}
-            >
-              Reset
-            </label>
-          </div>
         </div>
-      </main>
+        <div className="col">
+          {showers == null ? ( 'Empty' ) : ( 
+            showers.map((shower) => (
+              <>
+                <div className="row">
+                  <div className="col">
+                    {new Date(shower.date).toLocaleDateString("en-GB")}
+                  </div>
+                  <div className="col">{shower.time}</div>
+                  <div className="col">{shower.price}</div>
+                </div>
+              </>
+            ))
+           )}
+        </div>
+
+        <div
+          className="btn-group-vertical row mb-5"
+          role="group"
+          aria-label="start_stop_reset toggle group"
+        >
+          <input
+            type="radio"
+            className="btn-check"
+            name="start_stop_reset"
+            id="start"
+            autoComplete="off"
+          />
+          <label
+            className="btn btn-success"
+            htmlFor="start"
+            onClick={() => setRunning(true)}
+          >
+            Start
+          </label>
+
+          <input
+            type="radio"
+            className="btn-check"
+            name="start_stop_reset"
+            id="stop"
+            autoComplete="off"
+          />
+          <label
+            className="btn btn-warning"
+            htmlFor="stop"
+            onClick={() => { setRunning(false); getSet();}}
+          >
+            Stop
+          </label>
+
+          <input
+            type="radio"
+            className="btn-check"
+            name="start_stop_reset"
+            id="reset"
+            autoComplete="off"
+          />
+          <label
+            className="btn btn-danger"
+            htmlFor="reset"
+            onClick={() => setTime(0)}
+          >
+            Reset
+          </label>
+        </div>
+      </div>
 
       <footer className={styles.footer}>
         <a
