@@ -36,7 +36,8 @@ export default function Home({ data }) {
     } else if (!running) {
       clearInterval(interval);
     }
-    return () => clearInterval(interval);
+    return () => clearInterval(interval) && console.log(time)
+    
   }, [running]);
 
   return (
@@ -49,10 +50,10 @@ export default function Home({ data }) {
 
       <main className={styles.main}>
         <div className={styles.calculator}>
-          <div class="jumbotron jumbotron-fluid">
-            <div class="container">
-              <h1 class="display-4">Dusjkalkulator</h1>
-              <p class="lead">
+          <div className="jumbotron jumbotron-fluid">
+            <div className="container">
+              <h1 className="display-4">Dusjkalkulator</h1>
+              <p className="lead">
                 En enkel kalkulator for å kalkulere ca pris på en dusj. Pris
                 hentes sporadisk 😃
               </p>
@@ -73,20 +74,20 @@ export default function Home({ data }) {
           </h1>
 
           <div
-            class="btn-group-vertical"
+            className="btn-group-vertical"
             role="group"
             aria-label="start_stop_reset toggle group"
           >
             <input
               type="radio"
-              class="btn-check"
+              className="btn-check"
               name="start_stop_reset"
               id="start"
-              autocomplete="off"
+              autoComplete="off"
             />
             <label
-              class="btn btn-success"
-              for="start"
+              className="btn btn-success"
+              htmlFor="start"
               onClick={() => setRunning(true)}
             >
               Start
@@ -94,14 +95,14 @@ export default function Home({ data }) {
 
             <input
               type="radio"
-              class="btn-check"
+              className="btn-check"
               name="start_stop_reset"
               id="stop"
-              autocomplete="off"
+              autoComplete="off"
             />
             <label
-              class="btn btn-warning"
-              for="stop"
+              className="btn btn-warning"
+              htmlFor="stop"
               onClick={() => setRunning(false)}
             >
               Stop
@@ -109,14 +110,14 @@ export default function Home({ data }) {
 
             <input
               type="radio"
-              class="btn-check"
+              className="btn-check"
               name="start_stop_reset"
               id="reset"
-              autocomplete="off"
+              autoComplete="off"
             />
             <label
-              class="btn btn-danger"
-              for="reset"
+              className="btn btn-danger"
+              htmlFor="reset"
               onClick={() => setTime(0)}
             >
               Reset
