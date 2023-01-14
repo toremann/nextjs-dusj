@@ -1,5 +1,8 @@
 ## Deployment URL [dusj.vercel.app](https://dusj.vercel.app/)
 
+![man-shower](https://user-images.githubusercontent.com/50668920/212471847-33b5e0ed-4cef-4b5d-9fd3-a3478a98b1bf.gif)
+
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
