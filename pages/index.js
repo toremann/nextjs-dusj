@@ -22,6 +22,11 @@ export default function Home({ data }) {
 
   const showerUsagePerMin = 0.56; //kWh
 
+  const clearLocalStorage = () => {
+    localStorage.removeItem('showerTime')
+    setShowers('initial')
+  }
+
   const handleLocalStorage = () => {
     const existingEntries = JSON.parse(localStorage.getItem("showerTime"));
     if (existingEntries == null) existingEntries = [];
@@ -79,7 +84,7 @@ export default function Home({ data }) {
           </p>
         </div>
       </div>
-      <div className="d-flex flex-column justify-content-center flex-lg-row m-5">
+      <div className="d-flex flex-column justify-content-center flex-lg-row p-2">
         <div className="col">
           <h1>{kWhPris.toFixed(2)} NOK/kWh</h1>
           <b>{new Date(dato).toLocaleString("en-GB")}</b>
@@ -126,10 +131,12 @@ export default function Home({ data }) {
                       <BsCurrencyDollar /> {shower.price} NOK
                     </div>
                   </div>
-                ))}
+                ))
+                }
+                {showers == 'initial' ? '' : <button className="btn btn-danger mt-2" onClick={() => clearLocalStorage()}>Slett dusj tider</button>}
         </div>
       </div>
-      <div className="d-flex flex-column justify-content-center p-5">
+      <div className="d-flex flex-column justify-content-center">
         <div
           className="btn-group-vertical row mb-5"
           role="group"
