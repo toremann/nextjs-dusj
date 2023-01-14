@@ -1,24 +1,18 @@
 import Head from "next/head";
+import Image from 'next/image'
 import styles from "../styles/Home.module.css";
 import { useState, useEffect } from "react";
 import { AiFillGithub } from "react-icons/ai";
-
-export async function getServerSideProps() {
-  // Fetch data from external API
-  const res = await fetch(
-    `https://rest.fjordkraft.no/pricecalculator/priceareainfo/private/1001`
-  );
-  const data = await res.json();
-
-  // Pass data to the page via props
-  return { props: { data } };
-}
+import {
+  BsFillCalendarDateFill,
+  BsCurrencyDollar,
+  BsFillStopwatchFill,
+} from "react-icons/bs";
 
 export default function Home({ data }) {
-  // time is milliseconds
   const [time, setTime] = useState(0);
   const [running, setRunning] = useState(false);
-  const [showers, setShowers] = useState([]);
+  const [showers, setShowers] = useState('initial');
 
   const kWhPris = data.price / 100;
   const dato = data.lastUpdatedPriceAreaDate;
@@ -28,26 +22,33 @@ export default function Home({ data }) {
 
   const showerUsagePerMin = 0.56; //kWh
 
-  const getSet = () => {
+  const handleLocalStorage = () => {
     const existingEntries = JSON.parse(localStorage.getItem("showerTime"));
     if (existingEntries == null) existingEntries = [];
 
-    let entry = {
+    let newShowerTime = {
       time: time,
       date: new Date(),
       price: (((time / 60000) % 60) * showerUsagePerMin * kWhPris).toFixed(2),
+      kwh: (((time / 60000) % 60) * showerUsagePerMin).toFixed(2),
     };
 
-    localStorage.setItem("showerTimeNew", JSON.stringify(entry));
-    // Save allEntries back to local storage
-    existingEntries.push(entry);
+    if (newShowerTime.time === 0) {
+      return;
+    }
+
+    localStorage.setItem("showerTimeNew", JSON.stringify(newShowerTime));
+    existingEntries.push(newShowerTime);
     localStorage.setItem("showerTime", JSON.stringify(existingEntries));
+
+    setShowers(JSON.parse(localStorage.getItem("showerTime")));
   };
 
   useEffect(() => {
-    // Perform localStorage action
-    setShowers(JSON.parse(localStorage.getItem("showerTime")));
-  }, [showers]);
+    if (showers.length == 0) {
+      setShowers(JSON.parse(localStorage.getItem("showerTime")));
+    }
+  });
 
   useEffect(() => {
     let interval;
@@ -62,7 +63,7 @@ export default function Home({ data }) {
   }, [running]);
 
   return (
-    <div className={styles.container}>
+    <div className="container">
       <Head>
         <title>Dusjkalkulator</title>
         <meta name="description" content="Dusjkalkulator" />
@@ -78,7 +79,7 @@ export default function Home({ data }) {
           </p>
         </div>
       </div>
-      <div className="d-flex justify-content-center row">
+      <div className="d-flex flex-column justify-content-center flex-lg-row m-5">
         <div className="col">
           <h1>{kWhPris.toFixed(2)} NOK/kWh</h1>
           <b>{new Date(dato).toLocaleString("en-GB")}</b>
@@ -94,22 +95,41 @@ export default function Home({ data }) {
             {("0" + ((time / 10) % 100)).slice(-2)}
           </h1>
         </div>
-        <div className="col">
-          {showers == null ? ( 'Empty' ) : ( 
-            showers.map((shower) => (
-              <>
-                <div className="row">
-                  <div className="col">
-                    {new Date(shower.date).toLocaleDateString("en-GB")}
+        <div className="col mb-2">
+          {showers == 'initial'
+            ? 
+            <div className="justify-content-center">
+              <Image 
+              src="https://media.tenor.com/snJWGo7pEQcAAAAC/man-shower.gif" height={'200px'} width={'400px'} />
+            </div>
+            : showers
+                .slice(-5)
+                .reverse()
+                .map((shower, index) => (
+                  <div className="row" key={index}>
+                    <div className="col">
+                      <BsFillCalendarDateFill />{" "}
+                      {new Date(shower.date).toLocaleDateString("en-GB")}
+                    </div>
+                    <div className="col">
+                      <BsFillStopwatchFill />{" "}
+                      {(
+                        "0" + Math.floor((`${shower.time}` / 60000) % 60)
+                      ).slice(-2)}
+                      :
+                      {("0" + Math.floor((`${shower.time}` / 1000) % 60)).slice(
+                        -2
+                      )}
+                      :{("0" + ((`${shower.time}` / 10) % 100)).slice(-2)}
+                    </div>
+                    <div className="col">
+                      <BsCurrencyDollar /> {shower.price} NOK
+                    </div>
                   </div>
-                  <div className="col">{shower.time}</div>
-                  <div className="col">{shower.price}</div>
-                </div>
-              </>
-            ))
-           )}
+                ))}
         </div>
-
+      </div>
+      <div className="d-flex flex-column justify-content-center p-5">
         <div
           className="btn-group-vertical row mb-5"
           role="group"
@@ -140,7 +160,10 @@ export default function Home({ data }) {
           <label
             className="btn btn-warning"
             htmlFor="stop"
-            onClick={() => { setRunning(false); getSet();}}
+            onClick={() => {
+              setRunning(false);
+              handleLocalStorage();
+            }}
           >
             Stop
           </label>
@@ -176,4 +199,15 @@ export default function Home({ data }) {
       </footer>
     </div>
   );
+}
+
+export async function getServerSideProps() {
+  // Fetch data from external API
+  const res = await fetch(
+    `https://rest.fjordkraft.no/pricecalculator/priceareainfo/private/1001`
+  );
+  const data = await res.json();
+
+  // Pass data to the page via props
+  return { props: { data } };
 }
