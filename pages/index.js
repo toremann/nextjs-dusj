@@ -105,7 +105,7 @@ export default function Home({ data }) {
             ? 
             <div className="justify-content-center">
               <Image 
-              src="https://media.tenor.com/snJWGo7pEQcAAAAC/man-shower.gif" height={'200px'} width={'400px'} />
+              src="/man-shower.gif" height={'200px'} width={'400px'} />
             </div>
             : showers
                 .slice(-5)
