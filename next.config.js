@@ -1,19 +1,8 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
-  images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'media.tenor.com',
-      },
-    ],
-  },
-  reactStrictMode: true,
-  swcMinify: true,
-  i18n: {
-    locales: ['no'],
-    defaultLocale: 'no'
-  }
-}
+const withPWA = require('next-pwa')({
+  dest: 'public',
+})
 
-module.exports = nextConfig
+module.exports = withPWA({
+  // config
+})
