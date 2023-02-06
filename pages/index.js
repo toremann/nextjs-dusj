@@ -105,7 +105,7 @@ export default function Home({ data }) {
             ? 
             <div className="justify-content-center">
               <Image 
-              src="/man-shower.gif" alt="man taking a shower" height={'200px'} width={'400px'} />
+              src="/man-shower.gif" alt="man taking a shower" height={'273px'} width={'498px'} />
             </div>
             : showers
                 .slice(-5)
