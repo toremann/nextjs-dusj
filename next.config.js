@@ -4,14 +4,6 @@ const withPWA = require('next-pwa')({
 })
 
 const nextConfig = {
-  images: {
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "media.tenor.com",
-      },
-    ],
-  },
   reactStrictMode: true,
   swcMinify: true,
   i18n: {
